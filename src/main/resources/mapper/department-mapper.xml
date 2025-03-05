@@ -85,13 +85,67 @@
 
 
 
-    <select id="selectDepartmentByNnumber"  resultMap="BaseResultMap">
+    <select id="selectDepartmentByNumber"  resultMap="BaseResultMap">
 
         select
         <include refid="Base_Column_List"/>
         from t_department
         where department_number = #{departmentNumber} order by id desc limit 1
 
+    </select>
+
+
+
+    <select id="selectDepartmentByNumbers"  resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from t_department
+        where department_number in 
+        <foreach collection="departmentNumberList" item="departmentNumber" separator="," open="(" close=")">
+            #{departmentNumber}
+        </foreach>
+
+    </select>
+
+
+
+    <select id="selectDepartmentPageCount" resultType="java.lang.Long">
+        select count(*) from t_department
+        <where>
+            <if test="departmentName != null" > and department_name like concat('%' , #{departmentName} , '%') </if>
+            <if test="departmentNumber != null" > and department_number = departmentNumber </if>
+
+        </where>
+    </select>
+
+    <select id="selectDepartmentPageList" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from t_department
+        <where>
+            <if test="departmentName != null" > and department_name like concat('%' , #{departmentName} , '%') </if>
+            <if test="departmentNumber != null" > and department_number = departmentNumber </if>
+        </where>
+        order by id desc limit #{offSet} ,#{pageSize}
+
+    </select>
+
+
+    <select id="selectAllNameANdNumber" resultMap="BaseResultMap">
+        select department_name , department_number
+        from t_department   order by id desc
+
+    </select>
+
+
+    <select id="selectAllDepartment" resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from t_department
+        order by id
     </select>
 
 
