@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangwang.management.mapper.DepartmentMapper">
+
+    <resultMap id="BaseResultMap" type="com.wangwang.management.domain.entity.DepartmentEntity">
+        <id property="id" column="id"/>
+        <result property="departmentNumber" column="department_number"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="parentDepartmentNumber" column="parent_department_number"/>
+        <result property="departmentPath" column="department_path"/>
+        <result property="createById" column="create_by_id"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateById" column="update_by_id"/>
+        <result property="updateByName" column="update_by_name"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,department_number,department_name,
+        parent_department_number,department_path,create_by_id,
+        create_by_name,create_time,update_by_id,
+        update_by_name,update_time
+    </sql>
+    <insert id="addDepartmentEntity" useGeneratedKeys="true" keyProperty="id" parameterType="com.wangwang.management.domain.entity.DepartmentEntity">
+
+        insert into t_department
+
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="departmentNumber != null">department_number,</if>
+            <if test="departmentName != null">department_name,</if>
+            <if test="parentDepartmentNumber != null">parent_department_number,</if>
+            <if test="departmentPath != null">department_path,</if>
+            <if test="createById != null">create_by_id,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateById != null">update_by_id,</if>
+            <if test="updateByName != null">update_by_name,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+         value
+
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="departmentNumber != null">#{departmentNumber},</if>
+            <if test="departmentName != null">#{departmentName},</if>
+            <if test="parentDepartmentNumber != null">#{parentDepartmentNumber},</if>
+            <if test="departmentPath != null">#{departmentPath},</if>
+            <if test="createById != null">#{createById},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateById != null">#{updateById},</if>
+            <if test="updateByName != null">#{updateByName},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+
+    </insert>
+    <update id="updateDepartmentEntityById" parameterType="com.wangwang.management.domain.entity.DepartmentEntity">
+
+        update t_department
+        <set>
+            <if test="departmentNumber != null">department_number = #{departmentNumber},</if>
+            <if test=" departmentName != null">department_name = #{departmentName},</if>
+            <if test=" parentDepartmentNumber != null">parent_department_number = #{parentDepartmentNumber},</if>
+            <if test=" departmentPath != null">department_path = #{departmentPath},</if>
+            <if test="updateById != null">update_by_id = #{updateById},</if>
+            <if test=" updateByName!= null">update_by_name = #{updateByName},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+
+    </update>
+
+
+    <select id="selectDepartmentByName"  resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from t_department
+        where department_name = #{departmentName} order by id desc limit 1
+
+    </select>
+
+
+
+    <select id="selectDepartmentByNnumber"  resultMap="BaseResultMap">
+
+        select
+        <include refid="Base_Column_List"/>
+        from t_department
+        where department_number = #{departmentNumber} order by id desc limit 1
+
+    </select>
+
+
+</mapper>
