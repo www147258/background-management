@@ -1,5 +1,6 @@
 package com.wangwang.management.service;
 
+import com.wangwang.management.common.exception.BusinessException;
 import com.wangwang.management.convert.ResponseConvert;
 import com.wangwang.management.common.domain.PageResponse;
 import com.wangwang.management.common.utils.StringUtils;
@@ -9,6 +10,7 @@ import com.wangwang.management.domain.request.department.DepartmentListRequest;
 import com.wangwang.management.domain.response.department.DepartmentListResponse;
 import com.wangwang.management.domain.response.department.DepartmentNumberAndNameResponse;
 import com.wangwang.management.domain.response.department.DepartmentTreeResponse;
+import com.wangwang.management.enums.ResponseCodeAndMsgEnum;
 import com.wangwang.management.mapper.DepartmentMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -52,14 +54,14 @@ public class DepartmentService {
         addDepartmentEntity.setUpdateTime(System.currentTimeMillis() / 1000);
         addDepartmentEntity.setDepartmentName(departmentName);
         if (Objects.nonNull(department)) {
-            throw new RuntimeException("部门名字重复，请重新修改名字添加");
+            throw new BusinessException(ResponseCodeAndMsgEnum.DEPARTMENT_NAME_EXISTS);
         }
 
         String parentDepartmentNumber = departmentAddRequest.getParentDepartmentNumber();
         if (StringUtils.isNotBlank(parentDepartmentNumber)) {
             DepartmentEntity parentDepartmentEntity = departmentMapper.selectDepartmentByNumber(parentDepartmentNumber);
             if (Objects.isNull(parentDepartmentEntity)) {
-                throw new RuntimeException("上级部门不存在");
+                throw new BusinessException(ResponseCodeAndMsgEnum.DEPARTMENT_NOT_EXISTS);
             }
 
 

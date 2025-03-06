@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangwang.management.mapper.SystemUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.wangwang.management.domain.entity.SystemUserEntity">
+        <id property="id" column="id"/>
+        <result property="systemAccount" column="system_account"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="password" column="password"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="userState" column="user_state" jdbcType="TINYINT"/>
+        <result property="createById" column="create_by_id"/>
+        <result property="createByName" column="create_by_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateById" column="update_by_id"/>
+        <result property="updateByName" column="update_by_name"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,system_account,user_phone,
+        password,nick_name,user_state,
+        create_by_id,create_by_name,create_time,
+        update_by_id,update_by_name,update_time
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_system_user
+        where  id = #{id}
+    </select>
+
+    <select id="selectSystemUserByAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_system_user
+        where system_account = #{systemAccount} order by id desc limit 1
+
+    </select>
+
+    <select id="selectSystemUserByUserPhone" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from t_system_user
+        where user_phone = #{userPhone} order by id desc limit 1
+
+    </select>
+    <select id="selectSystemUserPageCount" resultType="java.lang.Long">
+        select count(*) from t_system_user
+        <where>
+            <if test="userState != null">and user_state = #{userState}</if>
+            <if test="userNickName != null">and nick_name like concat('%',#{userNickName}, '%')</if>
+            <if test="systemAccount != null">and system_account = #{systemAccount}</if>
+            <if test="userPhone != null">and user_phone = #{userPhone}</if>
+        </where>
+    </select>
+
+    <select id="selectSystemUserPageList" resultMap="BaseResultMap">
+
+
+        select
+        <include refid="Base_Column_List" />
+        from t_system_user
+        <where>
+            <if test="userState != null">and user_state = #{userState}</if>
+            <if test="userNickName != null">and nick_name like concat('%',#{userNickName}, '%')</if>
+            <if test="systemAccount != null">and system_account = #{systemAccount}</if>
+            <if test="userPhone != null">and user_phone = #{userPhone}</if>
+        </where>
+        order by id desc limit #{offSet},#{pageSize}
+
+    </select>
+
+
+    <insert id="insertSystemUser"
+            keyProperty="id" parameterType="com.wangwang.management.domain.entity.SystemUserEntity" useGeneratedKeys="true">
+        insert into t_system_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="systemAccount != null">system_account,</if>
+            <if test="userPhone != null">user_phone,</if>
+            <if test="password != null">password,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="userState != null">user_state,</if>
+            <if test="createById != null">create_by_id,</if>
+            <if test="createByName != null">create_by_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateById != null">update_by_id,</if>
+            <if test="updateByName != null">update_by_name,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="systemAccount != null">#{systemAccount},</if>
+            <if test="userPhone != null">#{userPhone},</if>
+            <if test="password != null">#{password},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="userState != null">#{userState},</if>
+            <if test="createById != null">#{createById},</if>
+            <if test="createByName != null">#{createByName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateById != null">#{updateById},</if>
+            <if test="updateByName != null">#{updateByName},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="com.wangwang.management.domain.entity.SystemUserEntity">
+        update t_system_user
+        <set>
+            <if test="systemAccount != null">
+                system_account = #{systemAccount},
+            </if>
+            <if test="userPhone != null">
+                user_phone = #{userPhone},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName},
+            </if>
+            <if test="userState != null">
+                user_state = #{userState},
+            </if>
+            <if test="updateById != null">
+                update_by_id = #{updateById},
+            </if>
+            <if test="updateByName != null">
+                update_by_name = #{updateByName},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where   id = #{id}
+    </update>
+
+</mapper>

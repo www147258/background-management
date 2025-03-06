@@ -13,3 +13,7 @@ mybatis:
   mapper-locations: classpath:/mapper/**.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+background:
+  management:
+    secretKey: Q8arRKLlcFnEsR8rT7QRzpfwpwuMFT8vho/DcXtD7Wo=

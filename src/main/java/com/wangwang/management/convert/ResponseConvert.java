@@ -2,9 +2,12 @@ package com.wangwang.management.convert;
 
 import com.wangwang.management.common.utils.StringUtils;
 import com.wangwang.management.domain.entity.DepartmentEntity;
+import com.wangwang.management.domain.entity.SystemUserEntity;
 import com.wangwang.management.domain.response.department.DepartmentListResponse;
 import com.wangwang.management.domain.response.department.DepartmentNumberAndNameResponse;
 import com.wangwang.management.domain.response.department.DepartmentTreeResponse;
+import com.wangwang.management.domain.response.systemuser.SystemUserPageListResponse;
+import com.wangwang.management.enums.SystemUserStateEnum;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -70,5 +73,36 @@ public final class ResponseConvert {
         departmentTreeResponse.setDepartmentNumber(department.getDepartmentNumber());
         departmentTreeResponse.setChildDepartments(new ArrayList<>());
         return departmentTreeResponse;
+    }
+
+    public static List<SystemUserPageListResponse> convertSystemUserPageListResponse(List<SystemUserEntity> systemUserEntities) {
+        if (CollectionUtils.isEmpty(systemUserEntities)) {
+            return Collections.emptyList();
+        }
+
+        return systemUserEntities.stream().map(ResponseConvert::convertSystemUserPageListResponse).filter(Objects::nonNull).collect(Collectors.toList());
+
+
+    }
+
+    public static SystemUserPageListResponse convertSystemUserPageListResponse(SystemUserEntity systemUserEntity) {
+        if (Objects.isNull(systemUserEntity)) {
+            return null;
+        }
+        SystemUserPageListResponse systemUserPageListResponse = new SystemUserPageListResponse();
+        systemUserPageListResponse.setSystemUserId(systemUserEntity.getId());
+        systemUserPageListResponse.setSystemAccount(systemUserEntity.getSystemAccount());
+        systemUserPageListResponse.setUserPhone(StringUtils.desensitizePhoneNumber(systemUserEntity.getUserPhone()));
+        systemUserPageListResponse.setUserState(systemUserEntity.getUserState());
+        systemUserPageListResponse.setUserNickName(systemUserEntity.getNickName());
+        systemUserPageListResponse.setUserStateDesc(SystemUserStateEnum.valueCode(systemUserPageListResponse.getUserState()).getDesc());
+        systemUserPageListResponse.setCreateByName(systemUserEntity.getCreateByName());
+        systemUserPageListResponse.setUpdateByName(systemUserEntity.getUpdateByName());
+        systemUserPageListResponse.setCreateTime(systemUserEntity.getCreateTime());
+        systemUserPageListResponse.setUpdateTime(systemUserEntity.getUpdateTime());
+        return systemUserPageListResponse;
+
+
+
     }
 }
